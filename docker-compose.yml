@@ -1,0 +1,33 @@
+services:
+  db: # mysql
+    image: mariadb:lts         # https://hub.docker.com/_/mariadb
+    volumes:
+    - type: volume
+      source: db
+      target: /var/lib/mysql
+    - ./app/src/installation/tables.my.sql:/docker-entrypoint-initdb.d/01-init-data.sql:ro
+    environment:
+        MARIADB_RANDOM_ROOT_PASSWORD: 'true'
+        MARIADB_DATABASE: ${DB_NAME}
+        MARIADB_USER: ${DB_USER}
+        MARIADB_PASSWORD: ${DB_PASSWORD}
+    restart: unless-stopped
+  app: # apache + mod_php
+    image: php:apache          # https://hub.docker.com/_/php
+    volumes:
+    - ./app/src:/var/www/html
+    - type: volume
+      source: uploads
+      target: /var/www/html/personnalisation/images:rw
+    ports:
+      - "8080:80"
+    depends_on:
+    - db
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    restart: unless-stopped
+volumes:
+  db:
+  uploads:
