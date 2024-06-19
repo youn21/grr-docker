@@ -13,14 +13,13 @@ services:
         MARIADB_PASSWORD: ${DB_PASSWORD}
     restart: unless-stopped
   app: # apache + mod_php
-    image: php:apache          # https://hub.docker.com/_/php
+    build: app # uses app/Dockerfile
     volumes:
-    - ./app/src:/var/www/html
     - type: volume
       source: uploads
-      target: /var/www/html/personnalisation/images:rw
+      target: /var/www/html/personnalisation/images
     ports:
-      - "8080:80"
+      - "8080:8080"
     depends_on:
     - db
     environment:

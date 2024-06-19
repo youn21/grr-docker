@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+env_substr()
+{
+	local mod=/var/www/html/include/connect.inc.php
+	grep -q "{DB_NAME}" "$mod" || sed -i -e "s/{DB_NAME}/$DB_NAME/g" "$mod"
+	grep -q "{DB_USER}" "$mod" || sed -i -e "s/{DB_USER}/$DB_USER/g" "$mod"
+	grep -q "{DB_PASSWORD}" "$mod" || sed -i -e "s/{DB_PASSWORD}/$DB_PASSWORD/g" "$mod"
+}
+
+env_substr
+
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+	set -- php-fpm "$@"
+fi
+
+exec "$@"
