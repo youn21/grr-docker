@@ -9,20 +9,22 @@ RUN docker-php-ext-configure gd && \
     docker-php-ext-configure zip && \
     docker-php-ext-configure xml && \
     docker-php-ext-configure mbstring && \
-    docker-php-ext-configure opcache
-RUN docker-php-ext-install gd mysqli pdo_mysql zip xml mbstring opcache
+    docker-php-ext-configure opcache && \
+    docker-php-ext-configure intl 
+RUN docker-php-ext-install gd mysqli pdo_mysql zip xml mbstring opcache intl
 # RUN apk del build-base freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev libxml2-dev m4 re2c autoconf
 
 #RUN apt update && apt install -y php-gd php-mbstring php-mysql php-xml php-intl
 
 COPY src /var/www/html
 RUN chown -R www-data: /var/www/html/personnalisation/images
+RUN chown -R www-data: /var/www/html/temp
 #RUN chown -R www-data: themes/default/css/types.css
 
 # the 0 group must be able to read
 RUN chgrp -R 0 /var/www/html
 RUN chmod -R g+rx /var/www/html
-RUN chmod -R g+w /var/www/html/personnalisation
+RUN chmod -R g+w /var/www/html/personnalisation /var/www/html/temp
 #RUN chgrp -R 0 /var/www/html themes/default/css/types.css
 #RUN chmod -R g+rx /var/www/html themes/default/css/types.css
 
