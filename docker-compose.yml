@@ -1,19 +1,36 @@
+x-mariadb-env: &cenv                       # https://yaml.org/spec/1.2.2/#3222-anchors-and-aliases
+  MARIADB_RANDOM_ROOT_PASSWORD: 'true'
+  MARIADB_DATABASE: ${DB_NAME}
+  MARIADB_USER: ${DB_USER}
+  MARIADB_PASSWORD: ${DB_PASSWORD}
+x-grr-env: &grr
+  GRR_ADMIN_PASSWORD: ${GRR_ADMIN_PASSWORD}
 services:
   db: # mysql
     image: mariadb:lts         # https://hub.docker.com/_/mariadb
     volumes:
     - type: volume
-      source: db
+      source: db_data
       target: /var/lib/mysql
-    - ./app/src/installation/tables.my.sql:/docker-entrypoint-initdb.d/01-init-data.sql:ro
     environment:
-        MARIADB_RANDOM_ROOT_PASSWORD: 'true'
-        MARIADB_DATABASE: ${DB_NAME}
-        MARIADB_USER: ${DB_USER}
-        MARIADB_PASSWORD: ${DB_PASSWORD}
+      <<: *cenv                # https://yaml.org/type/merge.html
     restart: unless-stopped
+  init:
+    image: mariadb:lts
+    environment:
+      <<: [*cenv, *grr]        # https://yaml.org/type/merge.html
+    command: /init/init_db.sh
+    volumes:
+      - ./app/src/installation/tables.my.sql:/etc/init_data/tables.my.sql:ro
+      - ./init/scripts:/init
+    depends_on:
+      db:
+        condition: service_started
   app: # apache + mod_php
-    build: app # uses app/Dockerfile
+    build:
+      context: ./app # uses app/Dockerfile
+      args:
+        - GRR_ADMIN_PASSWORD=greuuuuuh
     volumes:
     - type: volume
       source: uploads
@@ -21,12 +38,15 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-    - db
+      db:
+        condition: service_started
+      init:
+          condition: service_completed_successfully
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
     restart: unless-stopped
 volumes:
-  db:
+  db_data:
   uploads:

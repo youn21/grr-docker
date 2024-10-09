@@ -39,9 +39,9 @@ COPY connect.inc.php /var/www/html/personnalisation/connect.inc.php
 
 #COPY php.ini /etc/php/php.ini
 
+RUN rm -rf /var/www/html/installation
 
-
-COPY db_config.sh /usr/local/bin/db_config.sh
+COPY ./scripts/db_config.sh /usr/local/bin/db_config.sh
 RUN chmod +x /usr/local/bin/db_config.sh
 
 ENTRYPOINT [ "/usr/local/bin/db_config.sh" ]
