@@ -30,6 +30,8 @@ services:
   app: # apache + mod_php
     build:
       context: ./app # uses app/Dockerfile
+      args:
+        PHP_VERSION: 8.3
     volumes:
     - type: volume
       source: uploads
