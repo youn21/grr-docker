@@ -1,3 +1,4 @@
+x-mariadb-image: &mariadb-version mariadb:11.5.2
 x-mariadb-env: &cenv                       # https://yaml.org/spec/1.2.2/#3222-anchors-and-aliases
   MARIADB_RANDOM_ROOT_PASSWORD: 'true'
   MARIADB_DATABASE: ${DB_NAME}
@@ -7,7 +8,7 @@ x-grr-env: &grr
   GRR_ADMIN_PASSWORD: ${GRR_ADMIN_PASSWORD}
 services:
   db: # mysql
-    image: mariadb:lts         # https://hub.docker.com/_/mariadb
+    image: *mariadb-version      # https://hub.docker.com/_/mariadb
     volumes:
     - type: volume
       source: db_data
@@ -16,7 +17,7 @@ services:
       <<: *cenv                # https://yaml.org/type/merge.html
     restart: unless-stopped
   init:
-    image: mariadb:lts
+    image: *mariadb-version
     environment:
       <<: [*cenv, *grr]        # https://yaml.org/type/merge.html
     command: /init/init_db.sh
@@ -29,8 +30,6 @@ services:
   app: # apache + mod_php
     build:
       context: ./app # uses app/Dockerfile
-      args:
-        - GRR_ADMIN_PASSWORD=greuuuuuh
     volumes:
     - type: volume
       source: uploads

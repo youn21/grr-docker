@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/php
-FROM php:apache
+FROM php:8.3-apache
 
 # RUN apk add --no-cache build-base freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev libxml2-dev m4 re2c autoconf libpng libjpeg-turbo freetype libzip
 RUN apt update && apt install -y zlib1g-dev libpng-dev libzip-dev libxml2-dev libonig-dev
