@@ -2,20 +2,19 @@
 ARG  PHP_VERSION
 FROM php:${PHP_VERSION}-apache
 
-# RUN apk add --no-cache build-base freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev libxml2-dev m4 re2c autoconf libpng libjpeg-turbo freetype libzip
-RUN apt update && apt install -y zlib1g-dev libpng-dev libzip-dev libxml2-dev libonig-dev
-RUN docker-php-ext-configure gd && \
-    docker-php-ext-configure mysqli && \
+RUN apt update && apt install -y zlib1g-dev libpng-dev libzip-dev libxml2-dev libonig-dev \
+		libfreetype-dev \
+		libjpeg62-turbo-dev libgd-dev
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+	&& docker-php-ext-install gd
+RUN docker-php-ext-configure mysqli && \
     docker-php-ext-configure pdo_mysql && \
     docker-php-ext-configure zip && \
     docker-php-ext-configure xml && \
     docker-php-ext-configure mbstring && \
     docker-php-ext-configure opcache && \
     docker-php-ext-configure intl 
-RUN docker-php-ext-install gd mysqli pdo_mysql zip xml mbstring opcache intl
-# RUN apk del build-base freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev libxml2-dev m4 re2c autoconf
-
-#RUN apt update && apt install -y php-gd php-mbstring php-mysql php-xml php-intl
+RUN docker-php-ext-install mysqli pdo_mysql zip xml mbstring opcache intl
 
 COPY src /var/www/html
 RUN chown -R www-data: /var/www/html/personnalisation/images
@@ -25,9 +24,10 @@ RUN chown -R www-data: /var/www/html/temp
 # the 0 group must be able to read
 RUN chgrp -R 0 /var/www/html
 RUN chmod -R g+rx /var/www/html
+# Does the container need to write somewhere ?
 RUN chmod -R g+w /var/www/html/personnalisation /var/www/html/temp
 
-# Does the container need to write somewhere ?
+
 
 # copy connect template
 COPY connect.inc.php /var/www/html/personnalisation/connect.inc.php.template

@@ -36,10 +36,17 @@ EOF
         ) && [ "$tables" -gt 0 ]
 }
 
+backup_dir=/etc/init_data/backups
 
 if ! is_sourced; then
-  db_exists || \
-    patch_migration "${GRR_ADMIN_PASSWORD}" /etc/init_data/tables.my.sql | sql
+  migration=/etc/init_data/tables.my.sql
+  if [ -d "${backup_dir}" ] && [ ! -z "$(ls -A ${backup_dir})" ]; then # a backup exists
+    migration="${backup_dir}/$(ls -A "${backup_dir}"|tail -n 1)"
+  fi
+  if ! db_exists; then
+    echo "migrate to $migration"
+    patch_migration "${GRR_ADMIN_PASSWORD}" "$migration" | sql
+  fi
   exec "$@"
 fi
 

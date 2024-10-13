@@ -29,6 +29,7 @@ services:
     command: /init/init_db.sh
     volumes:
       - ./app/src/installation/tables.my.sql:/etc/init_data/tables.my.sql:ro
+      - ./backups/sql:/etc/init_data/backups:rw
       - ./init/scripts:/init
     depends_on:
       db:
