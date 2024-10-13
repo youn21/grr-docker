@@ -26,21 +26,21 @@ RUN chown -R www-data: /var/www/html/temp
 RUN chgrp -R 0 /var/www/html
 RUN chmod -R g+rx /var/www/html
 RUN chmod -R g+w /var/www/html/personnalisation /var/www/html/temp
-#RUN chgrp -R 0 /var/www/html themes/default/css/types.css
-#RUN chmod -R g+rx /var/www/html themes/default/css/types.css
 
 # Does the container need to write somewhere ?
 
+# copy connect template
+COPY connect.inc.php /var/www/html/personnalisation/connect.inc.php.template
 
-#COPY connect.inc.php /var/www/html/include/connect.inc.php
-COPY connect.inc.php /var/www/html/personnalisation/connect.inc.php
-#COPY config.inc.php /var/www/html/include/config.inc.php
-#COPY config_ldap.inc.php /var/www/html/include/config_ldap.inc.php
-#RUN chown www-data: /var/www/html/include/config_ldap.inc.php
+# copy script db_config
+COPY ./scripts/db_config.sh /usr/local/bin/db_config.sh
+RUN chmod +x /usr/local/bin/db_config.sh
+ENTRYPOINT [ "/usr/local/bin/db_config.sh" ]
 
-#COPY php.ini /etc/php/php.ini
+
 
 RUN rm -rf /var/www/html/installation
+
 
 RUN echo "Listen 8080" > /etc/apache2/ports.conf
 
