@@ -19,7 +19,7 @@ init_php_connect() {
   grep -q "{DB_USER}" "$dest" && sed -i -e "s/{DB_USER}/$DB_USER/g" "$dest"
   grep -q "{DB_PASSWORD}" "$dest" && sed -i -e "s/{DB_PASSWORD}/$DB_PASSWORD/g" "$dest"
 }
-a
+
 if ! is_sourced; then
   init_php_connect
   exec "$@"

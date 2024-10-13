@@ -9,6 +9,12 @@ x-grr-env: &grr
 services:
   db: # mysql
     image: *mariadb-version      # https://hub.docker.com/_/mariadb
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
     volumes:
     - type: volume
       source: db_data
@@ -26,7 +32,7 @@ services:
       - ./init/scripts:/init
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
   app: # apache + mod_php
     build:
       context: ./app # uses app/Dockerfile
@@ -37,10 +43,10 @@ services:
       source: uploads
       target: /var/www/html/personnalisation/images
     ports:
-      - "8080:8080"
+      - "${EXTERNAL_PORT}:8080"
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       init:
           condition: service_completed_successfully
     environment:
