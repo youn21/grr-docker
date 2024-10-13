@@ -42,11 +42,6 @@ COPY connect.inc.php /var/www/html/personnalisation/connect.inc.php
 
 RUN rm -rf /var/www/html/installation
 
-COPY ./scripts/db_config.sh /usr/local/bin/db_config.sh
-RUN chmod +x /usr/local/bin/db_config.sh
-
-ENTRYPOINT [ "/usr/local/bin/db_config.sh" ]
-
 RUN echo "Listen 8080" > /etc/apache2/ports.conf
 
 
