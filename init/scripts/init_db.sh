@@ -38,7 +38,8 @@ EOF
 
 
 if ! is_sourced; then
-  patch_migration "${GRR_ADMIN_PASSWORD}" /etc/init_data/tables.my.sql | sql
+  db_exists || \
+    patch_migration "${GRR_ADMIN_PASSWORD}" /etc/init_data/tables.my.sql | sql
   exec "$@"
 fi
 
