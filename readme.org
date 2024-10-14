@@ -370,10 +370,14 @@ docker inspect grr-docker-app-1| jq '.[0].Config.Env'
 - DiD : utilisable en intégration continue pour des tests
 - idéal pour développer en local une application
 
-Pour déployer : voir la suite :-)
+Pour déployer : voir la suite !
+
+#+REVEAL: split
 #+begin_src bash
-, kompose --provider openshift --file compose.yaml convert -o k8s/
-# inspect
+kompose --provider openshift --file compose.yaml convert -o k8s/
+#+end_src
+
+Permet d'obtenir un mapping initial entre les objets gérés par docker-compose et les objets kubernetes.
 
 * TP
 #+begin_src bash
