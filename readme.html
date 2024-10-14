@@ -385,8 +385,8 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 <h2>Conteneuriser</h2><h3>une application</h3><h6>Pierre Gambarotto</h6><img src="./img/imt_logo.jpg" />
 </section>
 <section>
-<section id="slide-org0bd786e">
-<h2 id="org0bd786e">Objectifs</h2>
+<section id="slide-orgcb341b9">
+<h2 id="orgcb341b9">Objectifs</h2>
 <p>
 À partir d&rsquo;une application existante :
 </p>
@@ -401,8 +401,8 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 </section>
 </section>
 <section>
-<section id="slide-orgd9db900">
-<h3 id="orgd9db900">Prérequis</h3>
+<section id="slide-orgeecdf53">
+<h3 id="orgeecdf53">Prérequis</h3>
 <ul>
 <li>connaître docker</li>
 <li>outils : docker dans une version &gt; 2020</li>
@@ -412,8 +412,8 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 </section>
 </section>
 <section>
-<section id="slide-orgd4144ce">
-<h3 id="orgd4144ce">Quant à moi</h3>
+<section id="slide-org1f2ff4d">
+<h3 id="org1f2ff4d">Quant à moi</h3>
 <img class="stretch" src="img/avatar.png">
 
 <p>
@@ -436,20 +436,20 @@ Centres d&rsquo;intérêts : programmation fonctionnelle, déploiement reproduct
 </section>
 </section>
 <section>
-<section id="slide-org18be2e4">
-<h2 id="org18be2e4">Cas d&rsquo;étude : GRR</h2>
+<section id="slide-org13dedb9">
+<h2 id="org13dedb9">Cas d&rsquo;étude : GRR</h2>
 <img class="stretch" src="img/grrr.jpg">
 </section>
 </section>
 <section>
-<section id="slide-orgbc5b074">
-<h3 id="orgbc5b074">Grr par Devome</h3>
+<section id="slide-orgba90eb4">
+<h3 id="orgba90eb4">Grr par Devome</h3>
 <img class="stretch" src="img/grr-devome-imt.png">
 </section>
 </section>
 <section>
-<section id="slide-org21b6ef9">
-<h3 id="org21b6ef9">Source</h3>
+<section id="slide-org4c409eb">
+<h3 id="org4c409eb">Source</h3>
 <p>
 <a href="https://github.com/JeromeDevome/GRR">https://github.com/JeromeDevome/GRR</a>
 version cible : 4.3.X
@@ -469,8 +469,8 @@ php : modules php-fileinfo, php-gd, php-mbstring, php-mysqli, php-mysqlnd, php-x
 </section>
 </section>
 <section>
-<section id="slide-org8a1296f">
-<h3 id="org8a1296f">Ce que cela fait</h3>
+<section id="slide-org7b712e2">
+<h3 id="org7b712e2">Ce que cela fait</h3>
 <p>
 Permets à des <i>utilisateurs</i> de réserver des <i>ressources</i> d&rsquo;un <i>domaine</i> dans un <i>calendrier</i>.
 </p>
@@ -484,8 +484,8 @@ Permets à des <i>utilisateurs</i> de réserver des <i>ressources</i> d&rsquo;un
 </section>
 </section>
 <section>
-<section id="slide-orge319669">
-<h3 id="orge319669">Présentation et test de grr</h3>
+<section id="slide-org2b4f6ce">
+<h3 id="org2b4f6ce">Présentation et test de grr</h3>
 <div class="org-src-container">
 
 <pre class="src src-bash"><span style="color: #ECBE7B;">git</span> clone --recurse-submodules <span style="color: #98be65;">\</span>
@@ -511,8 +511,8 @@ Remarques :
 
 </ul>
 </section>
-<section id="slide-org002ba8f">
-<h4 id="org002ba8f">Créer quelques ressourecs</h4>
+<section id="slide-orgfc04825">
+<h4 id="orgfc04825">Créer quelques ressourecs</h4>
 <ol>
 <li>Connectez-vous en tant qu&rsquo;admin</li>
 <li>Passer dans la partie administration</li>
@@ -528,8 +528,8 @@ Observer le répertoire où est sauvegardée l&rsquo;image
 =&gt; <code>personnalisation/images/ressources/1-bb14175d9eff562ebc3fe42d20614aec/img_1.gif</code>
 </p>
 </section>
-<section id="slide-orgbea4a2e">
-<h4 id="orgbea4a2e">observez les conteneurs docker mis en jeu</h4>
+<section id="slide-orge69ef27">
+<h4 id="orge69ef27">observez les conteneurs docker mis en jeu</h4>
 <div class="org-src-container">
 
 <pre class="src src-bash">docker compose ps -a
@@ -546,8 +546,8 @@ grr-init-1   mariadb:11.5.2   <span style="color: #98be65;">"docker-entrypoint.s
 
 </ul>
 </section>
-<section id="slide-orgda747e3">
-<h4 id="orgda747e3">Persistence : volumes</h4>
+<section id="slide-org98083b9">
+<h4 id="org98083b9">Persistence : volumes</h4>
 <div class="org-src-container">
 
 <pre class="src src-bash">docker volume <span style="color: #ECBE7B;">ls</span> | <span style="color: #ECBE7B;">grep</span> grr_
@@ -561,8 +561,8 @@ grr-init-1   mariadb:11.5.2   <span style="color: #98be65;">"docker-entrypoint.s
 
 </ul>
 </section>
-<section id="slide-org316fcae">
-<h4 id="org316fcae">Communication : network</h4>
+<section id="slide-orgc067e97">
+<h4 id="orgc067e97">Communication : network</h4>
 <div class="org-src-container">
 
 <pre class="src src-bash">docker network <span style="color: #ECBE7B;">ls</span> | <span style="color: #ECBE7B;">grep</span> grr_default
@@ -576,8 +576,8 @@ grr-init-1   mariadb:11.5.2   <span style="color: #98be65;">"docker-entrypoint.s
 
 </ul>
 </section>
-<section id="slide-orgbb4544c">
-<h4 id="orgbb4544c">Rappel : lancer un processus dans un conteneur existant</h4>
+<section id="slide-org991162a">
+<h4 id="org991162a">Rappel : lancer un processus dans un conteneur existant</h4>
 <p>
 À la mode <code>docker</code>
 </p>
@@ -611,8 +611,8 @@ Se généralise bien à toutes les commandes que vous connaissez sur docker :
 </section>
 </section>
 <section>
-<section id="slide-orgaffa111">
-<h2 id="orgaffa111">Conteneuriser une application</h2>
+<section id="slide-org8dccfea">
+<h2 id="org8dccfea">Conteneuriser une application</h2>
 <ol>
 <li>étudier l&rsquo;architecture de l&rsquo;application</li>
 <li>scindez en plusieurs conteneurs</li>
@@ -625,8 +625,8 @@ Se généralise bien à toutes les commandes que vous connaissez sur docker :
 </section>
 </section>
 <section>
-<section id="slide-orga6f8b31">
-<h3 id="orga6f8b31">Architecture, étude du cas de grr</h3>
+<section id="slide-orgc6a01c1">
+<h3 id="orgc6a01c1">Architecture, étude du cas de grr</h3>
 <p>
 Pour au final arriver à un découpage en conteneur, on s&rsquo;intéresse aux différents processus nécessaires à l&rsquo;application.
 </p>
@@ -646,8 +646,8 @@ ressources statique = du stockage
 </section>
 </section>
 <section>
-<section id="slide-org5b61a9a">
-<h3 id="org5b61a9a">Application web, 3 parties</h3>
+<section id="slide-orgb27436d">
+<h3 id="orgb27436d">Application web, 3 parties</h3>
 <ul>
 <li>app : application php, exécutée par php-fpm/module apache ou autre</li>
 <li>http : nginx, apache, caddy, …</li>
@@ -667,8 +667,8 @@ Si vous le souhaitez, en particulier pour des raison de performance, la partie h
 
 </ol>
 </section>
-<section id="slide-orgc78d3d6">
-<h4 id="orgc78d3d6">Interactions entre les différents parties</h4>
+<section id="slide-orgc888ca1">
+<h4 id="orgc888ca1">Interactions entre les différents parties</h4>
 <p>
 Par réseau ou par stockage
 </p>
@@ -691,8 +691,8 @@ app &lt;-&gt; mariadb sur tcp -&gt; mysql
 </section>
 </section>
 <section>
-<section id="slide-org3327007">
-<h3 id="org3327007">Transformation en docker-compose</h3>
+<section id="slide-orgdeed1a0">
+<h3 id="orgdeed1a0">Transformation en docker-compose</h3>
 <p>
 Principes :
 </p>
@@ -703,8 +703,8 @@ Principes :
 
 </ul>
 </section>
-<section id="slide-orgb83393c">
-<h4 id="orgb83393c">explication des principes</h4>
+<section id="slide-org5e7525e">
+<h4 id="org5e7525e">explication des principes</h4>
 <p>
 modularité/SoC Separation of Concerns : gérer séparément des choses différentes permet:
 </p>
@@ -731,8 +731,8 @@ Rappel : un conteneur docker est immutable, tout changement est écrit dans un <
 Les données persistentes sont gérées dans des <a href="https://docs.docker.com/engine/storage/volumes/">volumes</a>.
 </p>
 </section>
-<section id="slide-org668b190">
-<h4 id="org668b190">Découpage en conteneurs</h4>
+<section id="slide-orge7d46ec">
+<h4 id="orge7d46ec">Découpage en conteneurs</h4>
 <p>
 Grr: forte adhérence entre la partie app et la partie http, puisqu&rsquo;un stockage sous forme de fichiers est commun.
 </p>
@@ -746,8 +746,8 @@ Grr: forte adhérence entre la partie app et la partie http, puisqu&rsquo;un sto
 
 </ul>
 </section>
-<section id="slide-orgb80f8bb">
-<h4 id="orgb80f8bb">Notre choix : 1 seul conteneur</h4>
+<section id="slide-orgbc6b617">
+<h4 id="orgbc6b617">Notre choix : 1 seul conteneur</h4>
 <p>
 apache + mod php
 </p>
@@ -768,8 +768,8 @@ image de base : php:8.3-apache
 </pre>
 </div>
 </section>
-<section id="slide-orgf5e98da">
-<h4 id="orgf5e98da">Résumé</h4>
+<section id="slide-org7de955e">
+<h4 id="org7de955e">Résumé</h4>
 <p>
 Pour faire tourner GRR, on va utiliser 2 conteneurs
 </p>
@@ -779,8 +779,8 @@ Pour faire tourner GRR, on va utiliser 2 conteneurs
 
 </ul>
 </section>
-<section id="slide-org7caa908">
-<h4 id="org7caa908">Étape suivante : images de base</h4>
+<section id="slide-org5d3bb31">
+<h4 id="org5d3bb31">Étape suivante : images de base</h4>
 <p>
 Une des forces de l&rsquo;écosystème Docker
 </p>
@@ -800,8 +800,8 @@ Pour GRR, on choisit :
 </section>
 </section>
 <section>
-<section id="slide-org146f857">
-<h2 id="org146f857">Compose.yaml</h2>
+<section id="slide-org27e632d">
+<h2 id="org27e632d">Compose.yaml</h2>
 <p>
 <a href="https://docs.docker.com/reference/compose-file/">Fichier unique</a> permettant de définir tous les éléments d&rsquo;une application
 </p>
@@ -823,8 +823,8 @@ Pour GRR, on choisit :
 </section>
 </section>
 <section>
-<section id="slide-org9926d3d">
-<h3 id="org9926d3d">Étude du compose.yaml fourni</h3>
+<section id="slide-org978e8e1">
+<h3 id="org978e8e1">Étude du compose.yaml fourni</h3>
 <ul>
 <li>yaml</li>
 <li><a href="https://docs.docker.com/reference/compose-file/fragments/">fragments</a> : <code>&amp;ref</code> anchor, <code>*ref</code> alias. <a href="https://mikefarah.gitbook.io/yq/operators/anchor-and-alias-operators">yq: anchor and alias</a></li>
@@ -849,8 +849,8 @@ Injection automatique des variables d&rsquo;environnement définies dans <code>.
 </section>
 </section>
 <section>
-<section id="slide-org7f3ece0">
-<h3 id="org7f3ece0">service db</h3>
+<section id="slide-org2a6fc47">
+<h3 id="org2a6fc47">service db</h3>
 <p>
 <a href="https://github.com/MariaDB/mariadb-docker/tree/275297af91e85af864e70c70ce2a650ec128db9c/11.5">image Mariadb 11.5</a> utilisée directement
 </p>
@@ -870,8 +870,8 @@ Injection automatique des variables d&rsquo;environnement définies dans <code>.
 </section>
 </section>
 <section>
-<section id="slide-orgb0b3d0a">
-<h3 id="orgb0b3d0a">service app</h3>
+<section id="slide-org34cb3e7">
+<h3 id="org34cb3e7">service app</h3>
 <p>
 <a href="https://plmlab.math.cnrs.fr/anf2024/grr-docker/-/blob/main/compose.yaml?ref_type=heads#L37-57">compose.yaml L37=57</a>
 </p>
@@ -885,8 +885,8 @@ On suit le processus d&rsquo;installation de <a href="https://devome.com/GRR/DOC
 Dans le <a href="https://plmlab.math.cnrs.fr/anf2024/grr-docker/-/blob/main/app/Dockerfile?ref_type=heads">Dockerfile</a> : installation des dépendances php et binaires
 </p>
 </section>
-<section id="slide-org09c230b">
-<h4 id="org09c230b">ARG vs ENV</h4>
+<section id="slide-org908bafa">
+<h4 id="org908bafa">ARG vs ENV</h4>
 <p>
 <code>ARG</code> est utilisé dans le Dockerfile pour positionner la version de l&rsquo;image de base utilisée.
 </p>
@@ -899,8 +899,8 @@ ARG : utilisé dans la phase <i>build</i> : Dockerfile -&gt; image
 ENV : utilisé quand un conteneur s&rsquo;exécute : image -&gt; conteneur
 </p>
 </section>
-<section id="slide-org8e66d45">
-<h4 id="org8e66d45">Pour la configuration initiale</h4>
+<section id="slide-org878d941">
+<h4 id="org878d941">Pour la configuration initiale</h4>
 <ul>
 <li>configuration de <code>connect.inc.php</code></li>
 <li>injection dans la base de données du schéma initial : besoin du client mariadb</li>
@@ -910,8 +910,8 @@ ENV : utilisé quand un conteneur s&rsquo;exécute : image -&gt; conteneur
 </section>
 </section>
 <section>
-<section id="slide-org64336b4">
-<h3 id="org64336b4">Conteneur d&rsquo;initialisation</h3>
+<section id="slide-org272b127">
+<h3 id="org272b127">Conteneur d&rsquo;initialisation</h3>
 <p>
 <a href="https://plmlab.math.cnrs.fr/anf2024/grr-docker/-/blob/main/compose.yaml?ref_type=heads#L25-36">compose.yaml L25-36</a>
 </p>
@@ -929,8 +929,8 @@ de la base de donnée <a href="https://plmlab.math.cnrs.fr/anf2024/grr-docker/-/
 <a href="https://docs.docker.com/reference/compose-file/services/#depends_on">depends<sub>on</sub></a> : db service healthy, on utilise le healthcheck du conteneur db
 </p>
 </section>
-<section id="slide-org477a3ac">
-<h4 id="org477a3ac">Techniques utilisées pour la mise au point</h4>
+<section id="slide-orga45911f">
+<h4 id="orga45911f">Techniques utilisées pour la mise au point</h4>
 <ul>
 <li>scripts en bind mount : édition sur la machine hôte</li>
 <li>tests par bash dans un conteneur</li>
@@ -950,8 +950,8 @@ sql
 </section>
 </section>
 <section>
-<section id="slide-org48af28f">
-<h3 id="org48af28f">Configuration : env et bind mounts</h3>
+<section id="slide-org9e4066b">
+<h3 id="org9e4066b">Configuration : env et bind mounts</h3>
 <p>
 Pour configurer un conteneur, on combine :
 </p>
@@ -971,8 +971,26 @@ docker inspect grr-docker-app-1| jq '.[0].Config.Env'
 </section>
 </section>
 <section>
-<section id="slide-org17d6c93">
-<h2 id="org17d6c93">TP</h2>
+<section id="slide-org7424eb6">
+<h2 id="org7424eb6">Conclusion docker-compose</h2>
+<ul>
+<li>outil <i>local</i>, <i>docker swarm</i> n&rsquo;a jamais décollé : pas de <i>driver</i> pour le stockage en particulier</li>
+<li>principe de localité : entrée par un seul fichier</li>
+<li>DiD : utilisable en intégration continue pour des tests</li>
+<li>idéal pour développer en local une application</li>
+
+</ul>
+
+<p>
+Pour déployer : voir la suite :-)
+#+begin<sub>src</sub> bash
+, kompose &#x2013;provider openshift &#x2013;file compose.yaml convert -o k8s/
+</p>
+</section>
+</section>
+<section>
+<section id="slide-org375d51d">
+<h2 id="org375d51d">TP</h2>
 <div class="org-src-container">
 
 <pre class="src src-bash">docker compose up -d <span style="color: #5B6268;"># </span><span style="color: #5B6268;">-d : detach</span>
@@ -995,8 +1013,12 @@ Exemple avec le conteneur <code>app</code> :
 </section>
 </section>
 <section>
-<section id="slide-orgcb159b7">
-<h3 id="orgcb159b7">Inspecter la partie réseau</h3>
+<section id="slide-orgef8f05e">
+<h3 id="orgef8f05e">Inspectez !</h3>
+<p>
+Le réseau pour commencer.
+</p>
+
 <p>
 Point de départ :
 </p>
@@ -1008,11 +1030,22 @@ ip l <span style="color: #5B6268;"># </span><span style="color: #5B6268;">trouve
 <span style="color: #5B6268;"># </span><span style="color: #5B6268;">regarder les veth associ&#233;s</span>
 </pre>
 </div>
+
+</section>
+<section>
+<p>
+De manière plus globale : les fonctions <code>inspect</code> de docker sont excellentes
+pour comprendre la machinerie utilisée.
+</p>
+
+<p>
+Utilisez maintenant <code>docker volume inspect</code> pour trouver l&rsquo;endroit réel où sont stockés les fichiers correspondant aux différents volumes.
+</p>
 </section>
 </section>
 <section>
-<section id="slide-org019841f">
-<h3 id="org019841f">Gestion des secrets</h3>
+<section id="slide-orga67fa61">
+<h3 id="orga67fa61">Gestion des secrets</h3>
 <p>
 Déplacer la définition du mot de passe admin de la variable d&rsquo;environnement à un secret.
 </p>
@@ -1022,13 +1055,23 @@ Déplacer la définition du mot de passe admin de la variable d&rsquo;environnem
 </p>
 
 <p>
-Le mot de passe est actuellement utilisé dans <a href="https://plmlab.math.cnrs.fr/anf2024/grr-docker/-/blob/main/init/scripts/init_db.sh?ref_type=heads">init/scripts/init<sub>db.sh</sub></a> à partir de la variable <code>GRR_ADMIN_PASSWORD</code> définie dans le <code>.env</code>.
+Le mot de passe est actuellement utilisé dans <a href="https://plmlab.math.cnrs.fr/anf2024/grr-docker/-/blob/main/init/scripts/init_db.sh?ref_type=heads"><code>init/scripts/init_db.sh</code></a> à partir de la variable <code>GRR_ADMIN_PASSWORD</code> définie dans le <code>.env</code>.
 </p>
+
+</section>
+<section>
+
+<ol>
+<li>définissez un secret dans le fichier compose.yaml</li>
+<li>rendez-le accessible au service <code>init</code></li>
+<li>modifier le script lancé par le service init</li>
+
+</ol>
 </section>
 </section>
 <section>
-<section id="slide-org0dc1ef3">
-<h3 id="org0dc1ef3">service backup pour la base de données et les autres données</h3>
+<section id="slide-orgf3758c7">
+<h3 id="orgf3758c7">service backup pour la base de données et les autres données</h3>
 <p>
 Ajouter un service <code>backup</code> dans votre application.
 </p>
@@ -1037,6 +1080,8 @@ Ajouter un service <code>backup</code> dans votre application.
 Ce service doit être appelé pour réaliser un backup de la base de données ET des ressources statiques.
 </p>
 
+</section>
+<section>
 <p>
 indices :
 </p>
