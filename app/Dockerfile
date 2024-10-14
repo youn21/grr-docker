@@ -1,6 +1,7 @@
 # https://hub.docker.com/_/php
 ARG  PHP_VERSION
-FROM php:${PHP_VERSION}-apache
+#FROM php:${PHP_VERSION}-apache
+FROM plmlab.math.cnrs.fr/anf2024/dependency_proxy/containers/php:8.3-apache
 
 # dependancies installation
 RUN apt update && apt install -y zlib1g-dev libpng-dev libzip-dev libxml2-dev libonig-dev \
@@ -35,7 +36,7 @@ COPY connect.inc.php /var/www/html/personnalisation/connect.inc.php.template
 # copy script db_config
 COPY ./scripts/db_config.sh /usr/local/bin/db_config.sh
 RUN chmod +x /usr/local/bin/db_config.sh
-ENTRYPOINT [ "/usr/local/bin/db_config.sh" ] # will populate template from env
+ENTRYPOINT [ "/usr/local/bin/db_config.sh" ]
 
 
 RUN rm -rf /var/www/html/installation
