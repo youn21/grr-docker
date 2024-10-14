@@ -18,7 +18,8 @@ RUN docker-php-ext-configure mysqli && \
 RUN docker-php-ext-install mysqli pdo_mysql zip xml mbstring opcache intl
 
 COPY src /var/www/html
-RUN chown -R www-data: /var/www/html/personnalisation/images
+RUN mkdir -p /var/www/html/personnalisation/images /var/www/html/temp
+RUN chown -R www-data: /var/www/html/personnalisation/images 
 RUN chown -R www-data: /var/www/html/temp
 
 # the 0 group must be able to read
