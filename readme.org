@@ -1,414 +1,3 @@
-#+title: Conteneuriser une application
-#+Author: Pierre Gambarotto
-#+Email: pierre.gambarotto@math.univ-toulouse.fr
-#+OPTIONS: num:nil reveal_title_slide:auto toc:nil
-#+OPTIONS: reveal_center:nil
-#+OPTIONS: reveal_history:t
-#+OPTIONS: reveal_single_file:t
-#+REVEAL_THEME: white
-# beige black blood league moon night serif simple sky solarized white
-
-#+REVEAL_PLUGINS: (markdown notes zoom)
-#+REVEAL_TITLE_SLIDE: <h2>Conteneuriser</h2><h3>une application</h3><h6>%a</h6><img src="./img/imt_logo.jpg" />
-
-
-# local css
-# #+REVEAL_EXTRA_CSS: ./local.css
-#+REVEAL_MARGIN: 0.01
-#+REVEAL_ROOT: file:///home/gamba/Documents/code/reveal.js/
-# alternative cdn location: https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/
-# depth for vertical slide
-#+REVEAL_HLEVEL: 2
-
-# missing export option ? eval (require 'ox-reveal)
-# C-c C-e v v|b to export as a reveal js presentation
-#+LATEX_CLASS: article
-#+LaTeX_CLASS_OPTIONS: [a4paper]
-#+LaTeX_CLASS_OPTIONS: [12pt]
-#+LaTeX_CLASS_OPTIONS: [listings, listings-sv]
-#+LANGUAGE: fr
-#+LATEX_HEADER: \usepackage[francais]{babel}
-
-# C-c C-e l l/p/o to export as latex/pdf document
-
-# tangle a block : C-u C-c C-v C-t (C-ucvt)
-
-# include an image : C-c C-l, file:/…
-# toggle dispaly inline image: C-c C-x C-v
-
-# plantuml schema : <s tab plantuml :file i/toto.png
-# C-c C-c to generate result file
-
-# asciicast
-# #+REVEAL_HTML: <a href="https://asciinema.org/a/OWf7R9z0yceWKsKLd9EPTgqlJ?speed=2&autoplay=1" target="_blank"><img src="https://asciinema.org/a/OWf7R9z0yceWKsKLd9EPTgqlJ.svg" /></a>
-
-
-# split : #+REVEAL: split
-
-# https://github.com/yjwen/org-reveal
-
-# print pdf : /?print-pdf
-
-* Objectifs
-À partir d'une application existante :
-- étudier l'architecture de l'application
-- isoler les différents composants dans des conteneurs séparés
-- étudier la communication entre les différents composants
-- traduire en «docker compose»
-- configurer les liens entre conteneurs
-
-** Prérequis
-- connaître docker
-- outils : docker dans une version > 2020
-- git, jq
-
-** Quant à moi
-#+REVEAL_HTML: <img class="stretch" src="img/avatar.png">
-
-Responsable informatique à l'IMT (Toulouse)
-
-- développeur backend initialement
-- sysadmin unix
-
-Membre de la PLM Team
-
-Centres d'intérêts : programmation fonctionnelle, déploiement reproductible, architecture logicielle, self-hosting
-
-* Cas d'étude : GRR
-#+REVEAL_HTML: <img class="stretch" src="img/grrr.jpg">
-
-** Grr par Devome
-#+REVEAL_HTML: <img class="stretch" src="img/grr-devome-imt.png">
-** Source
-
-https://github.com/JeromeDevome/GRR
-version cible : 4.3.X
-
-PHP : >= 7.2.5 && <= 8.3
-
-php : modules php-fileinfo, php-gd, php-mbstring, php-mysqli, php-mysqlnd, php-xml, php-intl, mysql : >= 5.4 && <= 5.7
-
-https://devome.com/GRR/DOC/installation-et-mise-a-jour/installation
-
-** Ce que cela fait
-Permets à des /utilisateurs/ de réserver des /ressources/ d'un /domaine/ dans un /calendrier/.
-- ressources gérées par domaine
-- calendrier
-- utilisateurs : authentication interne ou sso/ldap
-- permissions des utilisateurs sur les actions possibles sur les ressources
-** Présentation et test de grr
-
-#+begin_src bash
-git clone --recurse-submodules \
-  https://plmlab.math.cnrs.fr/anf2024/grr-docker.git grr
-cd grr
-docker compose up # C-c pour arrêter
-#+end_src
-http://localhost:8888
-
-=> connexion : ADMINISTRATEUR/admin
-
-Remarques :
-- les sources de grr en version 4.3.6 sont liées par un sous-module git dans ~app/src~
-- fichier ~.env~
-
-*** Créer quelques ressourecs
-1. Connectez-vous en tant qu'admin
-2. Passer dans la partie administration
-3. Éditer le domaine
-   - ajouter ou personnaliser une ressource existante
-Observer le répertoire où est sauvegardée l'image
-=> ~personnalisation/images/ressources/1-bb14175d9eff562ebc3fe42d20614aec/img_1.gif~
-*** observez les conteneurs docker mis en jeu
-#+begin_src bash
-docker compose ps -a
-NAME         IMAGE            COMMAND                  SERVICE
-grr-app-1    grr-app          "/usr/local/bin/db_c…"   app
-grr-db-1     mariadb:11.5.2   "docker-entrypoint.s…"   db
-grr-init-1   mariadb:11.5.2   "docker-entrypoint.s…"   init
-#+end_src
-
-- nommage dépendant du projet, par défaut le répertoire
-- notion de service : conteneur docker
-
-*** Persistence : volumes
-#+begin_src bash
-docker volume ls | grep grr_
-local     grr_db_data
-local     grr_uploads
-#+end_src
-
-- même principes pour le nommage
-
-*** Communication : network
-#+begin_src bash
-docker network ls | grep grr_default
-8a06c789788f   grr_default          bridge    local
-
-#+end_src
-
-- nommage consistant
-
-*** Rappel : lancer un processus dans un conteneur existant
-À la mode ~docker~
-#+begin_src bash
-docker exec -ti  grr-app-1 /bin/bash
-#+end_src
-
-À la mode ~docker compose~
-#+begin_src bash
-docker compose exec -ti app /bin/bash
-#+end_src
-
-Se généralise bien à toutes les commandes que vous connaissez sur docker :
-#+begin_src bash
-docker compose [exec/run/kill/build/images/ps/pull/push]
-#+end_src
-
-~docker compose~ agit comme un wrapper pour docker pour les conteneurs définis dans ~compose.yaml~
-
-
-* Conteneuriser une application
-1. étudier l'architecture de l'application
-2. scindez en plusieurs conteneurs
-3. dénichez des images standards comme base
-4. créer ou adaptez les images au cas
-5. gestion de la persistence
-6. les détails
-** Architecture, étude du cas de grr
-Pour au final arriver à un découpage en conteneur, on s'intéresse aux différents processus nécessaires à l'application.
-
-Pour l'utilisateur, le fonctionnement est le suivant :
-#+begin_src
-navigateur -> [ http -> php -> mariadb ]
-navigateur -> [ http -> php -> ressources statiques ]
-navigateur -> [ http -> ressources statiques ]
-#+end_src
-
-ressources statique = du stockage
-
-** Application web, 3 parties
-
-- app : application php, exécutée par php-fpm/module apache ou autre
-- http : nginx, apache, caddy, …
-- base de données : mariadb, mysql
-
-#+REVEAL: split
-Si vous le souhaitez, en particulier pour des raison de performance, la partie http elle-même peut être scindée en plusieurs parties, pour assurer les fonctionnalités suivantes :
-1. terminaison ssl
-2. répartition de charge (haproxy, nginx, caddy …)
-3. cache
-
-
-*** Interactions entre les différents parties
-Par réseau ou par stockage
-
-Ici :
-
-http <-> app partagent des fichiers, typiquement les ressources css/js/images qui doivent être servies par la couche http mais peuvent être gérées par l'application php.
-
-la partie base de données ne communique qu'avec la partie application
-
-app <-> mariadb sur tcp -> mysql
-
-
-** Transformation en docker-compose
-Principes :
-- un container par groupes de processus, idéalement 1 processus principal par conteneur.
-- spécifier les moyens de communication entre 2 conteneurs: par réseau, par stockage
-- persistence : définir des volumes
-
-*** explication des principes
-modularité/SoC Separation of Concerns : gérer séparément des choses différentes permet:
-
-- séparer les évolutions
-- sécurité par conteneur
-- intégration continue : permet de gérer des caches, meilleure réactivité
-- utilisation d'image déjà faite
-
-#+REVEAL: split
-Persistence
-
-Rappel : un conteneur docker est immutable, tout changement est écrit dans un /overlay/ qui est perdu au redémarrage.
-
-Les données persistentes sont gérées dans des [[https://docs.docker.com/engine/storage/volumes/][volumes]].
-
-
-
-*** Découpage en conteneurs
-Grr: forte adhérence entre la partie app et la partie http, puisqu'un stockage sous forme de fichiers est commun.
-
-2 solutions possibles sans modifier l'application :
-- 1 seul conteneur avec les 2 processus et un volume de stockage
-- 2 conteneurs qui partagent le volume de stockage.
-
-*** Notre choix : 1 seul conteneur
-apache + mod php
-
--> un seul processus en écoute, apache
--> un seul volume de données non partagé
-
-image de base : php:8.3-apache
-
-#+begin_src dockerfile
-FROM php:8.3-apache
-
-#+end_src
-
-*** Résumé
-Pour faire tourner GRR, on va utiliser 2 conteneurs
-- db: processus de la base de données
-- app : apache+php
-
-*** Étape suivante : images de base
-Une des forces de l'écosystème Docker
-
-https://hub.docker.com/ : /registry/ par défaut utiliser par /pull/
-
-Pour GRR, on choisit :
-- [[https://hub.docker.com/_/mariadb][mariadb]] version 11.5.2
-- [[https://hub.docker.com/_/php][php]] version 8.3 avec apache
-
-*** COMMENT Alternative
-Si plusieurs processus, utilisez un superviseur de processus qui va devenir le processeus principal.
-
-systemd : pas compatible !
-
-s6
-https://platformengineers.io/blog/s6-overlay-quickstart/
-https://github.com/just-containers/s6-overlay
-
-* Compose.yaml
-[[https://docs.docker.com/reference/compose-file/][Fichier unique]] permettant de définir tous les éléments d'une application
-- les conteneurs, avec la clef [[https://docs.docker.com/reference/compose-file/services/][services]]
-- les [[https://docs.docker.com/reference/compose-file/volumes/][volumes]]
-- la partie réseau sous la clef [[https://docs.docker.com/reference/compose-file/networks/][networks]]
-- [[https://docs.docker.com/compose/releases/migrate/][docker compose V2]] : 2020, défaut en 2023
-
-À voir plus tard en TP :
-- [[https://docs.docker.com/reference/compose-file/configs/][configs]] et [[https://docs.docker.com/reference/compose-file/secrets/][secrets]]
-
-** Étude du compose.yaml fourni
-- yaml
-- [[https://docs.docker.com/reference/compose-file/fragments/][fragments]] : ~&ref~ anchor, ~*ref~ alias. [[https://mikefarah.gitbook.io/yq/operators/anchor-and-alias-operators][yq: anchor and alias]]
-- [[https://docs.docker.com/reference/compose-file/extension/][extensions]] : ~x-whatever~ est ignoré
-
-principes : issus des bonnes pratiques en développement DEVOPS
-- DRY
-- pas de constantes dans le code
-
-#+REVEAL: split
-Injection automatique des variables d'environnement définies dans ~.env~
-
-** service db
-[[https://github.com/MariaDB/mariadb-docker/tree/275297af91e85af864e70c70ce2a650ec128db9c/11.5][image Mariadb 11.5]] utilisée directement
-
-À savoir :
-- données gérées dans ~/var/lib/mysql~
-- crée une base en fonction des variables d'environnement ~MARIADB_*~
-
-[[https://plmlab.math.cnrs.fr/anf2024/grr-docker/-/blob/main/compose.yaml?ref_type=heads#L10-24][compose.yaml L10-24]], introduction du volume ~db_data~
-
-** service app
-[[https://plmlab.math.cnrs.fr/anf2024/grr-docker/-/blob/main/compose.yaml?ref_type=heads#L37-57][compose.yaml L37=57]]
-
-On construit nous-même une image
-On suit le processus d'installation de [[https://devome.com/GRR/DOC/installation-et-mise-a-jour/installation][GRR]], et on adapte.
-
-Dans le [[https://plmlab.math.cnrs.fr/anf2024/grr-docker/-/blob/main/app/Dockerfile?ref_type=heads][Dockerfile]] : installation des dépendances php et binaires
-
-*** ARG vs ENV
-~ARG~ est utilisé dans le Dockerfile pour positionner la version de l'image de base utilisée.
-
-ARG : utilisé dans la phase /build/ : Dockerfile -> image
-
-ENV : utilisé quand un conteneur s'exécute : image -> conteneur
-
-*** Pour la configuration initiale
-- configuration de ~connect.inc.php~
-- injection dans la base de données du schéma initial : besoin du client mariadb
-- insérer au moins le mot de passe admin dans la base : idem
-
-** Conteneur d'initialisation
-[[https://plmlab.math.cnrs.fr/anf2024/grr-docker/-/blob/main/compose.yaml?ref_type=heads#L25-36][compose.yaml L25-36]]
-
-service ~init~, basé sur la même image [[https://github.com/MariaDB/mariadb-docker/tree/275297af91e85af864e70c70ce2a650ec128db9c/11.5][image Mariadb 11.5]]
-
-On change la commande lancée pour un script spécifique d'initialisation
-de la base de donnée [[https://plmlab.math.cnrs.fr/anf2024/grr-docker/-/blob/main/init/scripts/init_db.sh?ref_type=heads][init_db.sh]]
-
-[[https://docs.docker.com/reference/compose-file/services/#depends_on][depends_on]] : db service healthy, on utilise le healthcheck du conteneur db
-
-*** Techniques utilisées pour la mise au point
-
-- scripts en bind mount : édition sur la machine hôte
-- tests par bash dans un conteneur
-- le script «sourcé» a un comportement différent du script exécuté
-  -> expose les fonctions utilisées, mais ne les exécute pas
-#+begin_src bash
-docker compose run -ti --rm init /bin/bash
-# inside
-source /init/init_db.sh
-declare -f # list all functions
-sql
-#+end_src
-
-** Configuration : env et bind mounts
-Pour configurer un conteneur, on combine :
-- des [[https://docs.docker.com/compose/how-tos/environment-variables/set-environment-variables/][variables d'environnement]]
-- des scripts injectés dans le conteneur par un [[https://docs.docker.com/engine/storage/bind-mounts/][bind mount]]
-
-MAIS !!!
-
-#+begin_src
-docker inspect grr-docker-app-1| jq '.[0].Config.Env'
-#+end_src
-
-* Conclusion docker-compose
-- outil /local/, /docker swarm/ n'a jamais décollé : pas de /driver/ pour le stockage en particulier
-- principe de localité : entrée par un seul fichier
-- DiD : utilisable en intégration continue pour des tests
-- idéal pour développer en local une application
-
-Pour déployer : voir la suite !
-
-#+REVEAL: split
-#+begin_src bash
-kompose --provider openshift --file compose.yaml convert -o k8s/
-#+end_src
-
-Permet d'obtenir un mapping initial entre les objets gérés par docker-compose et les objets kubernetes.
-
-* TP
-#+begin_src bash
-docker compose up -d # -d : detach
-dockur compose logs app|db -f # see the logs
-#+end_src
-
-Se connecter à chaque conteneur pour investiguer/mettre au point
-
-Exemple avec le conteneur ~app~ :
-#+begin_src bash
-docker compose exec -ti --rm app /bin/bash
-#+end_src
-
-** Inspectez !
-Le réseau pour commencer.
-
-Point de départ :
-#+begin_src bash
-docker network inspect grr_default
-# chercher l'id
-ip l # trouver le bridge avec l'id correspondant
-# regarder les veth associés
-#+end_src
-
-#+REVEAL: split
-De manière plus globale : les fonctions ~inspect~ de docker sont excellentes
-pour comprendre la machinerie utilisée.
-
-Utilisez maintenant ~docker volume inspect~ pour trouver l'endroit réel où sont stockés les fichiers correspondant aux différents volumes.
-
 ** Gestion des secrets
 Déplacer la définition du mot de passe admin de la variable d'environnement à un secret.
 
@@ -421,16 +10,61 @@ Le mot de passe est actuellement utilisé dans [[https://plmlab.math.cnrs.fr/anf
 1. définissez un secret dans le fichier compose.yaml
 2. rendez-le accessible au service ~init~
 3. modifier le script lancé par le service init
-** service backup pour la base de données et les autres données
-Ajouter un service ~backup~ dans votre application.
 
-Ce service doit être appelé pour réaliser un backup de la base de données ET des ressources statiques.
+** Tester à tout instant
 
-#+REVEAL: split
-indices :
-- utiliser le volume ~uploads~ existant
-- utiliser l'image mariadb pour la connexion
--  backup : définir un volume supplémentaire
+#+begin_src bash
+docker run -ti --rm init /bin/bash
+env # see environment
+#+end_src
+** Définir un secret
+~secrets~ est un clef à mettre à la racine du fichier [[file:compose.yaml][compose.yaml]]
 
-ne pas démarrer automatiquement : utiliser un [[https://docs.docker.com/compose/how-tos/profiles/][profil]] spécifiques
+#+begin_src yaml
+secrets:
+  grr_admin_password:
+    environment:
+      GRR_ADMIN_PASSWORD
+#+end_src
 
+Ici, on définit le secret ~grr_admin_password~ pour l'application, à partir du contenu de la variable d'environnement ~GRR_ADMIN_PASSWORD~
+
+** Enlever l'exposition de la variable d'environnement ~GRR_ADMIN_PASSWORD~
+Pour cela :
+#+begin_src diff
+     environment:
+-      <<: [*cenv, *grr]  # https://yaml.org/type/merge.html
++      <<: [*cenv]        # https://yaml.org/type/merge.html
+#+end_src
+
+Vérifier que la variable d'environnement GRR_ADMIN_PASSWORD n'est plus définie dans ~init~.
+
+** Rendre le secret accessible
+
+Dans le service ~init~ :
+
+#+begin_src diff
+services:
+  init:
+    environment:
+      <<: [*cenv]
++    secrets:
++      - grr_admin_password
+#+end_src
+
+Vérifier que le fichier ~/var/run/secrets~ a bien été définie avec le contenu correct.
+
+** Adapter le script
+Il suffit de redéfinir la variable à partir du fichier :
+#+begin_src diff
++GRR_ADMIN_PASSWORD="$(cat /var/run/secrets/grr_admin_password)"
+ if ! is_sourced; then
+#+end_src
+
+** Retester from scratch
+
+#+begin_src bash
+docker compose down --volumes
+docker compose up
+
+#+end_src

@@ -37,7 +37,7 @@ EOF
 }
 
 backup_dir=/etc/init_data/backups
-
+GRR_ADMIN_PASSWORD="$(cat /var/run/secrets/grr_admin_password)"
 if ! is_sourced; then
   migration=/etc/init_data/tables.my.sql
   if [ -d "${backup_dir}" ] && [ ! -z "$(ls -A ${backup_dir})" ]; then # a backup exists

@@ -25,7 +25,7 @@ services:
   init:
     image: *mariadb-version
     environment:
-      <<: [*cenv, *grr]        # https://yaml.org/type/merge.html
+      <<: [*cenv]        # https://yaml.org/type/merge.html
     command: /init/init_db.sh
     volumes:
       - ./app/src/installation/tables.my.sql:/etc/init_data/tables.my.sql:ro
@@ -34,6 +34,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    secrets:
+      - grr_admin_password
   app: # apache + mod_php
     build:
       context: ./app # uses app/Dockerfile
@@ -58,3 +60,7 @@ services:
 volumes:
   db_data:
   uploads:
+secrets:
+  grr_admin_password:
+    environment:
+      GRR_ADMIN_PASSWORD
